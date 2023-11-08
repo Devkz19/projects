@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random number genrator</title>
+    <style>
+         body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        
+        h2 {
+            color: #333;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #0074d9;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+    </style>
+</head>
+<body>
+    <h2>
+        Random number genrator  
+    </h2>
+    <input type="text" id="num1" placeholder="Enter maximum number "><br>
+    <input type="text" id="num2" placeholder="Enter minimum number "><br><br>
+    <button id="calculate" onclick="randomnogenrator()">Calculate</button>
+    <h1 id="result"></h1>
+    <script>
+     const randomnogenrator = () => {
+        let min = document.querySelector("#num1").value;
+        let max = document.querySelector("#num2").value;
+
+        if(num1 === '' || num2 === ''){
+             alert("Enter the empty fields");
+             return;
+        }
+          min = parseFloat(min);
+          max = parseFloat(max);
+
+          let randomno = Math.floor(Math.random() * (max - min + 1) + min);
+          document.querySelector('#result').innerHTML = `Result is : ${Math.round(randomno)}`
+        }
+    </script>
+</body>
+</html>
