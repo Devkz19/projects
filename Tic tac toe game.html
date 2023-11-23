@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe</title>
+  <style>
+  body {
+  font-family: 'Arial', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #282c34;
+  color: #61dafb;
+}
+
+h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+#board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-gap: 10px;
+}
+
+.cell {
+  width: 100px;
+  height: 100px;
+  font-size: 36px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  background-color: #61dafb;
+  border: 1px solid #61dafb;
+  color: #282c34;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.cell:hover {
+  background-color: #282c34;
+  color: #61dafb;
+}
+
+#message {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 24px;
+  color: #61dafb;
+}
+
+  </style>
+</head>
+<body>
+  <h1>TIC TAC TOE</h1>
+  <div id="board"></div>
+  <div id="message">Your turn!</div>
+
+  <script>
+    const board = document.getElementById("board");
+    const message = document.getElementById("message");
+
+    let currentPlayer = "X";
+    let gameBoard = ["", "", "", "", "", "", "", "", ""];
+    let isGameOver = false;
+
+    // Create the game board
+    for (let i = 0; i < 9; i++) {
+      const cell = document.createElement("div");
+      cell.classList.add("cell");
+      cell.dataset.index = i;
+      cell.addEventListener("click", handleCellClick);
+      board.appendChild(cell);
+    }
+
+    // Handle cell click
+    function handleCellClick(event) {
+      if (isGameOver) return;
+
+      const index = event.target.dataset.index;
+
+      if (gameBoard[index] === "") {
+        makeMove(index, currentPlayer);
+
+        if (!checkGameOver()) {
+          currentPlayer = "O";
+          showMessage("Computer's turn!");
+          setTimeout(() => {
+            computerMove();
+            if (!checkGameOver()) {
+              currentPlayer = "X";
+              showMessage("Your turn!");
+            }
+          }, 500);
+        }
+      }
+    }
+
+    // Make a move
+    function makeMove(index, player) {
+      gameBoard[index] = player;
+      board.children[index].textContent = player;
+    }
+
+    // Check for a winner
+    function checkWinner() {
+      const winPatterns = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+        [0, 4, 8], [2, 4, 6]             // Diagonals
+      ];
+
+      for (const pattern of winPatterns) {
+        const [a, b, c] = pattern;
+        if (gameBoard[a] !== "" && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+          highlightWinningCells(pattern);
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    // Check if the board is full (a draw)
+    function isBoardFull() {
+      return !gameBoard.includes("");
+    }
+
+    // Show a message on the screen
+    function showMessage(msg) {
+      message.textContent = msg;
+    }
+
+    // Highlight the winning cells
+    function highlightWinningCells(cells) {
+      for (const index of cells) {
+        board.children[index].style.backgroundColor = "#8BC34A"; // Change color to green
+      }
+    }
+
+    // Check if the game is over
+    function checkGameOver() {
+      if (checkWinner()) {
+        showMessage(currentPlayer === "X" ? "You win!" : "Computer wins!");
+        isGameOver = true;
+        disableBoard();
+        return true;
+      } else if (isBoardFull()) {
+        showMessage("It's a draw!");
+        isGameOver = true;
+        disableBoard();
+        return true;
+      }
+
+      return false;
+    }
+
+    // Disable the board after the game ends
+    function disableBoard() {
+      for (const cell of board.children) {
+        cell.removeEventListener("click", handleCellClick);
+        cell.style.cursor = "not-allowed";
+      }
+    }
+
+    // Computer's move
+    function computerMove() {
+      const availableMoves = gameBoard.reduce((acc, cell, index) => {
+        if (cell === "") {
+          acc.push(index);
+        }
+        return acc;
+      }, []);
+
+      const randomIndex = Math.floor(Math.random() * availableMoves.length);
+      const computerChoice = availableMoves[randomIndex];
+      makeMove(computerChoice, "O");
+    }
+  </script>
+</body>
+</html>
